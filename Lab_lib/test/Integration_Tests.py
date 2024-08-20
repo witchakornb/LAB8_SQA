@@ -28,16 +28,21 @@ def db_session():
 
 def test_create_borrowlist(db_session):
     # Add a user and a book for testing
-    user = User(username="test_borrower", fullname="Test Borrower")
+    user = User(username="test_borrower111", fullname="Test Borrower")
     db_session.add(user)
     db_session.commit()
 
-    book = Book(title="Test Borrow Book", firstauthor="Author Borrow", isbn="1122334455")
+    book = Book(title="Test Borrow Book111", firstauthor="Author Borrow", isbn="1122334455")
     db_session.add(book)
     db_session.commit()
 
-    # Create a borrowlist entry
-    response = client.post("/borrowlist/", json={"user_id": user.id, "book_id": book.id})
+    # Create a borrowlist entry using query parameters
+    response = client.post(f"/borrowlist/?user_id={user.id}&book_id={book.id}")
+
+    # Add debug information
+    if response.status_code != 200:
+        print("Response content:", response.content)
+
     assert response.status_code == 200
 
     # Verify that the borrowlist entry was correctly created
